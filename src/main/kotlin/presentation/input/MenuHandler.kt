@@ -1,7 +1,5 @@
 package presentation.input
 
-import domain.MovieController
-import domain.SessionController
 import presentation.model.OutputModel
 
 enum class Sections {
