@@ -32,7 +32,8 @@ class CommandsHandlerImpl(
     override fun start(): Result {
         val resultUsers = userController.deserialize()
         val resultMovies = movieController.deserialize()
-        val resultSessions = sessionController.deserialize()
+        val resultSessions = if (resultMovies == Success) sessionController.deserialize()
+        else Error(OutputModel("Sessions data is invalid now"))
         if (resultUsers == Success && resultMovies == Success && resultSessions == Success) {
             return Success
         }
