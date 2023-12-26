@@ -11,6 +11,6 @@ data class MovieEntity(
     val duration: Duration
 ) {
     override fun toString(): String {
-        return "Movie. id: $id name: $name director: $director duration: ${duration.toString().drop(2)}"
+        return "Movie. id: $id name: $name director: $director duration: $duration"
     }
 }
