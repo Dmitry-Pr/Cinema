@@ -15,8 +15,8 @@ class MenuImpl : Menu {
     override fun showMainMenu(): OutputModel {
         val res =
             """Main menu. Enter
-            |"movie" In order to add o change a movie
-            |"session" In order to add o change a session
+            |"movie" In order to add or change a movie
+            |"session" In order to add or change a session
             |"places" In order to work with places
             |"exit" In order to finish program
         """.trimMargin()
