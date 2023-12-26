@@ -4,7 +4,7 @@
 Мухин Дмитрий БПИ228
 
 ## Диаграммы
-[Use Case Diagram](use_case.png)
+[Use Case Diagram](use_case_diagram.png)
 
 [Class Diagram](class_diagram.png)
 
