@@ -17,7 +17,7 @@ data class SessionEntity(
     val timeStart: LocalDateTime,
     val movieId: Int
 ) {
-    val places = Array(SIZE_N) { Array(SIZE_M) { Places.Free } }
+    var places = Array(SIZE_N) { Array(SIZE_M) { Places.Free } }
 
     override fun toString(): String {
         return "Session. Id: $id starts: $timeStart movie: $movieId"

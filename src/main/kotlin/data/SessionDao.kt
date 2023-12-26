@@ -33,7 +33,10 @@ class RuntimeSessionDao : SessionDao {
         listSession.forEach { session -> sessions[session.id] = session }
 
     override fun load(sessions: List<SessionEntity>) {
-        sessions.forEach { add(it.timeStart, it.movieId) }
+        for (i in sessions.indices) {
+            add(sessions[i].timeStart, sessions[i].movieId)
+            this.sessions[counter - 1]?.places = sessions[i].places
+        }
     }
 
 }
