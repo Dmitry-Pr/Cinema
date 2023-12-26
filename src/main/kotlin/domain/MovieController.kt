@@ -2,7 +2,7 @@ package domain
 
 import data.MovieDao
 import presentation.model.OutputModel
-import java.time.Duration
+import kotlin.time.Duration
 
 interface MovieController {
     fun addMovie(name: String, director: String, duration: String): OutputModel
@@ -71,7 +71,7 @@ class MovieControllerImpl(
     }
 
     override fun getAllMovies(): OutputModel {
-        val movies = movieDao.getAll().joinToString()
+        val movies = movieDao.getAll().joinToString("\n")
         return OutputModel(movies).takeIf { it.message.isNotEmpty() } ?: OutputModel("List of movies is empty")
     }
 }

@@ -1,6 +1,8 @@
 package data
 
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
+
 
 const val SIZE_N = 10
 const val SIZE_M = 10
@@ -9,7 +11,7 @@ enum class Places {
     Free, Bought, Taken
 
 }
-
+@Serializable
 data class SessionEntity(
     val id: Int,
     val timeStart: LocalDateTime,
@@ -18,6 +20,6 @@ data class SessionEntity(
     val places = Array(SIZE_N) { Array(SIZE_M) { Places.Free } }
 
     override fun toString(): String {
-        return "Session: $id starts: $timeStart movie: $movieId"
+        return "Session. Id: $id starts: $timeStart movie: $movieId"
     }
 }

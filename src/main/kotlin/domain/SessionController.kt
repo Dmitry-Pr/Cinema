@@ -5,7 +5,7 @@ import data.Places
 import data.SIZE_M
 import data.SessionDao
 import presentation.model.OutputModel
-import java.time.LocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
 import java.time.format.DateTimeFormatter
 
 interface SessionController {
@@ -33,7 +33,12 @@ class SessionControllerImpl(
         return when (val result =
             sessionValidator.validateTimeStart(timeStart, movie.duration, startTimes, durations)) {
             Success -> {
-                sessionDao.add(LocalDateTime.parse(timeStart, DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss")), movieId)
+                sessionDao.add(
+                    java.time.LocalDateTime.parse(
+                        timeStart,
+                        DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
+                    ).toKotlinLocalDateTime(), movieId
+                )
                 OutputModel("Added the session")
             }
 
@@ -49,7 +54,12 @@ class SessionControllerImpl(
         return when (val result =
             sessionValidator.validateTimeStart(newTime, movie.duration, startTimes, durations)) {
             Success -> {
-                val newSession = session.copy(timeStart = LocalDateTime.parse(newTime, DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss")))
+                val newSession = session.copy(
+                    timeStart = java.time.LocalDateTime.parse(
+                        newTime,
+                        DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
+                    ).toKotlinLocalDateTime()
+                )
                 sessionDao.update(newSession)
                 OutputModel("The start time is changed")
             }
@@ -118,7 +128,8 @@ class SessionControllerImpl(
     }
 
     override fun getAllSessions(): OutputModel {
-        val sessions = sessionDao.getAll().joinToString { it.toString() + " " + movieDao.get(it.movieId).toString() }
+        val sessions =
+            sessionDao.getAll().joinToString("\n") { it.toString() + " " + movieDao.get(it.movieId).toString() }
         return OutputModel(sessions).takeIf { it.message.isNotEmpty() } ?: OutputModel("List of sessions is empty")
     }
 
@@ -150,25 +161,25 @@ class SessionControllerImpl(
 
     override fun getAllPlaces(id: Int): OutputModel {
         val session = sessionDao.get(id) ?: return OutputModel("Incorrect session id")
-        var res = "=======Screen======="
+        var res = "Screen".padStart(21, '=').padEnd(37, '=').padStart(46, ' ') + "\n"
         val freeColor = "\u26aa"
         val boughtColor = "\u26ab"
         val takenColor = "\ud83d\udd35"
         for (i in session.places.indices) {
-            res += "Row ${i + 1}    "
+            res += "Row ${i + 1}\t"
             for (j in session.places[i].indices) {
                 res += when (session.places[i][j]) {
                     Places.Free -> freeColor
                     Places.Bought -> boughtColor
                     Places.Taken -> takenColor
                 }
-                res += " "
+                res += "\t"
             }
             res += "\n"
         }
-        res += "Place "
+        res += "Place\t"
         for (i in 1..SIZE_M) {
-            res += "$i "
+            res += "$i\t"
         }
         return OutputModel(res)
     }

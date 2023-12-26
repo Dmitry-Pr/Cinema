@@ -1,6 +1,7 @@
 package data
 
-import java.time.Duration
+import kotlin.time.Duration
+
 
 interface MovieDao {
     fun add(name: String, director: String, duration: Duration)

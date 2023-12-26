@@ -27,7 +27,7 @@ class CommandsHandlerImpl(
     private val sessionController: SessionController,
 ) : CommandsHandler {
     override fun addMovie(): OutputModel {
-        println(OutputModel("Enter the movie in format: name; director; duration. Duration is in format: NNhNNm").message)
+        println(OutputModel("Enter the movie in format: name; director; duration. Duration is in format: nnHnnM").message)
         val input = readln().split("; ")
         if (input.size < 3) {
             return OutputModel("Incorrect number of arguments")
@@ -56,7 +56,7 @@ class CommandsHandlerImpl(
     }
 
     override fun changeMovieDuration(): OutputModel {
-        println(OutputModel("Enter movieId and newDirector in format: movieId; duration. Duration is in format: NNhNNm").message)
+        println(OutputModel("Enter movieId and newDirector in format: movieId; duration. Duration is in format: nnHnnM").message)
         val input = readln().split("; ")
         if (input.size < 2) {
             return OutputModel("Incorrect number of arguments")
@@ -70,7 +70,7 @@ class CommandsHandlerImpl(
     }
 
     override fun addSession(): OutputModel {
-        println(OutputModel("Enter the session in format: timeStart; movieId. timeStart is in format: dd.MM.YYYY HH:mm:ss").message)
+        println(OutputModel("Enter the session in format: timeStart; movieId. timeStart is in format: dd.MM.yyyy HH:mm:ss").message)
         val input = readln().split("; ")
         if (input.size < 2) {
             return OutputModel("Incorrect number of arguments")
@@ -80,7 +80,7 @@ class CommandsHandlerImpl(
     }
 
     override fun changeSessionTime(): OutputModel {
-        println(OutputModel("Enter sessionId, timeStart in format: sessionId; timeStart. timeStart is in format: dd.MM.YYYY HH:mm:ss").message)
+        println(OutputModel("Enter sessionId, timeStart in format: sessionId; timeStart. timeStart is in format: dd.MM.yyyy HH:mm:ss").message)
         val input = readln().split("; ")
         if (input.size < 2) {
             return OutputModel("Incorrect number of arguments")
@@ -113,7 +113,7 @@ class CommandsHandlerImpl(
         val id = input[0].toIntOrNull() ?: return OutputModel("Incorrect sessionId format")
         val x = input[1].toIntOrNull() ?: return OutputModel("Incorrect row format")
         val y = input[2].toIntOrNull() ?: return OutputModel("Incorrect place format")
-        return sessionController.buyPlace(id, x, y)
+        return sessionController.buyPlace(id, x - 1, y - 1)
 
     }
 
@@ -126,7 +126,7 @@ class CommandsHandlerImpl(
         val id = input[0].toIntOrNull() ?: return OutputModel("Incorrect sessionId format")
         val x = input[1].toIntOrNull() ?: return OutputModel("Incorrect row format")
         val y = input[2].toIntOrNull() ?: return OutputModel("Incorrect place format")
-        return sessionController.returnPlace(id, x, y)
+        return sessionController.returnPlace(id, x - 1, y - 1)
     }
 
     override fun takePlace(): OutputModel {
@@ -138,7 +138,7 @@ class CommandsHandlerImpl(
         val id = input[0].toIntOrNull() ?: return OutputModel("Incorrect sessionId format")
         val x = input[1].toIntOrNull() ?: return OutputModel("Incorrect row format")
         val y = input[2].toIntOrNull() ?: return OutputModel("Incorrect place format")
-        return sessionController.takePlace(id, x, y)
+        return sessionController.takePlace(id, x - 1, y - 1)
     }
 
     override fun showAllPlaces(): OutputModel {

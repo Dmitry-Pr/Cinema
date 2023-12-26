@@ -18,17 +18,17 @@ class MenuHandlerImpl(
     override var finish = false
     private var current = Sections.Main
     override fun handleMenu() {
-        val input = readln()
         when (current) {
-            Sections.Main -> mainCommand(input)
-            Sections.Movie -> movieCommand(input)
-            Sections.Session -> sessionCommand(input)
-            Sections.Places -> placesCommand(input)
+            Sections.Main -> mainCommand()
+            Sections.Movie -> movieCommand()
+            Sections.Session -> sessionCommand()
+            Sections.Places -> placesCommand()
         }
     }
 
-    private fun mainCommand(input: String) {
+    private fun mainCommand() {
         println(menu.showMainMenu().message)
+        val input = readln()
         when (input) {
             "movie" -> current = Sections.Movie
             "session" -> current = Sections.Session
@@ -40,8 +40,9 @@ class MenuHandlerImpl(
         }
     }
 
-    private fun movieCommand(input: String) {
+    private fun movieCommand() {
         println(menu.showMoviesMenu().message)
+        val input = readln()
         val res = when (input) {
             "add" -> commandsHandler.addMovie()
             "change name" -> commandsHandler.changeMovieName()
@@ -58,8 +59,9 @@ class MenuHandlerImpl(
         println(res.message)
     }
 
-    private fun sessionCommand(input: String) {
+    private fun sessionCommand() {
         println(menu.showSessionsMenu().message)
+        val input = readln()
         val res = when (input) {
             "add" -> commandsHandler.addSession()
             "change time" -> commandsHandler.changeSessionTime()
@@ -67,15 +69,16 @@ class MenuHandlerImpl(
             "show all" -> commandsHandler.showAllSessions()
             "exit" -> {
                 current = Sections.Main
-                OutputModel("Left movies section")
+                OutputModel("Left session section")
             }
             else -> OutputModel("Incorrect input")
         }
         println(res.message)
     }
 
-    private fun placesCommand(input: String) {
+    private fun placesCommand() {
         println(menu.showPlacesMenu().message)
+        val input = readln()
         val res = when (input) {
             "buy" -> commandsHandler.buyPlace()
             "return" -> commandsHandler.returnPlace()
@@ -85,7 +88,7 @@ class MenuHandlerImpl(
             "show bought" -> commandsHandler.showBoughtPlaces()
             "exit" -> {
                 current = Sections.Main
-                OutputModel("Left movies section")
+                OutputModel("Left places section")
             }
             else -> OutputModel("Incorrect input")
         }

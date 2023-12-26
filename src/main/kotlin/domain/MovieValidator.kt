@@ -1,7 +1,7 @@
 package domain
 
 import presentation.model.OutputModel
-import java.time.Duration
+import kotlin.time.Duration
 
 interface MovieValidator {
     fun validateName(name: String): Result
@@ -19,7 +19,7 @@ class MovieValidatorImpl : MovieValidator {
 
     override fun validateDuration(duration: String): Result {
         return try {
-            val dur = Duration.parse(duration)
+            Duration.parse(duration)
             Success
         } catch (ex: IllegalArgumentException) {
             Error(OutputModel("Duration is incorrect"))
