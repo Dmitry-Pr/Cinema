@@ -4,14 +4,13 @@ import presentation.model.OutputModel
 
 interface Menu {
     fun showMainMenu(): OutputModel
+    fun showRegistrationMenu(): OutputModel
     fun showMoviesMenu(): OutputModel
     fun showSessionsMenu(): OutputModel
     fun showPlacesMenu(): OutputModel
 }
 
-class MenuImpl(
-
-) : Menu {
+class MenuImpl : Menu {
 
     override fun showMainMenu(): OutputModel {
         val res =
@@ -19,6 +18,16 @@ class MenuImpl(
             |"movie" In order to add o change a movie
             |"session" In order to add o change a session
             |"places" In order to work with places
+            |"exit" In order to finish program
+        """.trimMargin()
+        return OutputModel(res)
+    }
+
+    override fun showRegistrationMenu(): OutputModel {
+        val res =
+            """Registration menu. Enter
+            |"log in" If you already have an account
+            |"sign up" In order to make an account
             |"exit" In order to finish program
         """.trimMargin()
         return OutputModel(res)

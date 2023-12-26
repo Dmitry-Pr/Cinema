@@ -14,6 +14,7 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+    implementation ("org.mindrot:jbcrypt:0.4")
     testImplementation(kotlin("test"))
 }
 

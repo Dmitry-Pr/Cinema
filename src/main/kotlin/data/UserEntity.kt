@@ -1,6 +1,9 @@
 package data
 
-data class User(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserEntity(
     val id: Int,
     val name: String,
     val surname: String,

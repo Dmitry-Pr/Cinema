@@ -1,9 +1,11 @@
 package presentation.input
 
+import domain.Success
+import domain.Error
 import presentation.model.OutputModel
 
 enum class Sections {
-    Main, Movie, Session, Places
+    Registration, Main, Movie, Session, Places
 }
 
 interface MenuHandler {
@@ -16,9 +18,10 @@ class MenuHandlerImpl(
     private val menu: Menu
 ) : MenuHandler {
     override var finish = false
-    private var current = Sections.Main
+    private var current = Sections.Registration
     override fun handleMenu() {
         when (current) {
+            Sections.Registration -> registrationCommand()
             Sections.Main -> mainCommand()
             Sections.Movie -> movieCommand()
             Sections.Session -> sessionCommand()
@@ -33,6 +36,31 @@ class MenuHandlerImpl(
             "movie" -> current = Sections.Movie
             "session" -> current = Sections.Session
             "places" -> current = Sections.Places
+            "exit" -> finish = true
+            else -> {
+                println(OutputModel("Incorrect command").message)
+            }
+        }
+    }
+
+    private fun registrationCommand() {
+        println(menu.showRegistrationMenu().message)
+        val input = readln()
+        when (input) {
+            "log in" -> {
+                when (val res = commandsHandler.logIn()) {
+                    Success -> current = Sections.Main
+                    is Error -> println(res.outputModel.message)
+                }
+            }
+
+            "sign up" -> {
+                when (val res = commandsHandler.signUp()) {
+                    Success -> current = Sections.Main
+                    is Error -> println(res.outputModel.message)
+                }
+            }
+
             "exit" -> finish = true
             else -> {
                 println(OutputModel("Incorrect command").message)
@@ -71,6 +99,7 @@ class MenuHandlerImpl(
                 current = Sections.Main
                 OutputModel("Left session section")
             }
+
             else -> OutputModel("Incorrect input")
         }
         println(res.message)
@@ -90,6 +119,7 @@ class MenuHandlerImpl(
                 current = Sections.Main
                 OutputModel("Left places section")
             }
+
             else -> OutputModel("Incorrect input")
         }
         println(res.message)

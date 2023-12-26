@@ -1,10 +1,11 @@
 package presentation.input
 
-import domain.MovieController
-import domain.SessionController
+import domain.*
 import presentation.model.OutputModel
 
 interface CommandsHandler {
+    fun logIn(): Result
+    fun signUp(): Result
     fun addMovie(): OutputModel
     fun changeMovieName(): OutputModel
     fun changeMovieDirector(): OutputModel
@@ -25,7 +26,26 @@ interface CommandsHandler {
 class CommandsHandlerImpl(
     private val movieController: MovieController,
     private val sessionController: SessionController,
+    private val userController: UserController
 ) : CommandsHandler {
+    override fun logIn(): Result {
+        println(OutputModel("Enter login and password in format: login; password").message)
+        val input = readln().split("; ")
+        if (input.size < 2) {
+            return Error(OutputModel("Incorrect number of arguments"))
+        }
+        return userController.loginUser(input[0], input[1])
+    }
+
+    override fun signUp(): Result {
+        println(OutputModel("Enter user info in format: name; surname; login; password").message)
+        val input = readln().split("; ")
+        if (input.size < 4) {
+            return Error(OutputModel("Incorrect number of arguments"))
+        }
+        return userController.addUser(input[0], input[1], input[2], input[3])
+    }
+
     override fun addMovie(): OutputModel {
         println(OutputModel("Enter the movie in format: name; director; duration. Duration is in format: nnHnnM").message)
         val input = readln().split("; ")

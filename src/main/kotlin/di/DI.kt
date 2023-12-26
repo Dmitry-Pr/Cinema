@@ -1,9 +1,6 @@
 package di
 
-import data.MovieDao
-import data.RuntimeMovieDao
-import data.RuntimeSessionDao
-import data.SessionDao
+import data.*
 import domain.*
 import presentation.input.*
 
@@ -15,6 +12,9 @@ object DI {
     private val sessionValidator: SessionValidator
         get() = SessionValidatorImpl()
 
+    private val userValidator: UserValidator
+        get() = UserValidatorImpl()
+
     private val menu: Menu
         get() = MenuImpl()
 
@@ -23,6 +23,10 @@ object DI {
     }
     private val sessionDao: SessionDao by lazy {
         RuntimeSessionDao()
+    }
+
+    private val userDao: UserDao by lazy {
+        RuntimeUserDao()
     }
 
     private val sessionController: SessionController
@@ -38,8 +42,14 @@ object DI {
             movieValidator = movieValidator
         )
 
+    private val userController: UserController
+        get() = UserControllerImpl(
+            userDao = userDao,
+            userValidator = userValidator
+        )
+
     private val commandsHandler: CommandsHandler
-        get() = CommandsHandlerImpl(movieController, sessionController)
+        get() = CommandsHandlerImpl(movieController, sessionController, userController)
 
     val menuHandler: MenuHandler
         get() = MenuHandlerImpl(commandsHandler, menu)
