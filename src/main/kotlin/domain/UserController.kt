@@ -1,6 +1,7 @@
 package domain
 
 import data.UserDao
+import data.UserEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.mindrot.jbcrypt.BCrypt
@@ -13,6 +14,7 @@ const val USERS_JSON_PATH = "data/users.json"
 interface UserController {
     fun addUser(name: String, surname: String, login: String, password: String): Result
     fun loginUser(login: String, password: String): Result
+    fun deserialize(): Result
 }
 
 class UserControllerImpl (
@@ -47,12 +49,24 @@ class UserControllerImpl (
 
     override fun loginUser(login: String, password: String): Result {
         val user = userDao.get(login) ?: return Error(OutputModel("User with login $login is not found"))
-        val hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt())
-        return when(BCrypt.checkpw(user.password, hashedPassword)) {
-            true -> Success
-            false -> Error(OutputModel("Incorrect password"))
+        return when {
+            BCrypt.checkpw(password, user.password) -> Success
+            else -> Error(OutputModel("Incorrect password"))
         }
     }
+
+    override fun deserialize(): Result {
+        return try {
+            val file = File(USERS_JSON_PATH)
+            val jsonString = file.readText()
+            val users = Json.decodeFromString<List<UserEntity>>(jsonString)
+            userDao.load(users)
+            Success
+        } catch (ex: Exception) {
+            Error(OutputModel("Unable to load users data"))
+        }
+    }
+
     private fun serialize(): Result {
         return try {
             val file = File(USERS_JSON_PATH)

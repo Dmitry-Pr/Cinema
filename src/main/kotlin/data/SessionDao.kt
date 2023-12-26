@@ -8,10 +8,11 @@ interface SessionDao {
     fun getAll(): List<SessionEntity>
     fun get(id: Int): SessionEntity?
     fun update(vararg listSession: SessionEntity)
+    fun load(sessions: List<SessionEntity>)
 }
 
 class RuntimeSessionDao : SessionDao {
-    private val sessions = mutableMapOf<Int, SessionEntity>()
+    private var sessions = mutableMapOf<Int, SessionEntity>()
     private var counter = 0
 
     override fun add(timeStart: LocalDateTime, movieId: Int) {
@@ -30,5 +31,9 @@ class RuntimeSessionDao : SessionDao {
 
     override fun update(vararg listSession: SessionEntity) =
         listSession.forEach { session -> sessions[session.id] = session }
+
+    override fun load(sessions: List<SessionEntity>) {
+        sessions.forEach { add(it.timeStart, it.movieId) }
+    }
 
 }

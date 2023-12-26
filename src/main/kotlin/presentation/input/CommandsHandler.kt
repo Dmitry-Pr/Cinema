@@ -4,6 +4,7 @@ import domain.*
 import presentation.model.OutputModel
 
 interface CommandsHandler {
+    fun start(): Result
     fun logIn(): Result
     fun signUp(): Result
     fun addMovie(): OutputModel
@@ -28,6 +29,20 @@ class CommandsHandlerImpl(
     private val sessionController: SessionController,
     private val userController: UserController
 ) : CommandsHandler {
+    override fun start(): Result {
+        val resultUsers = userController.deserialize()
+        val resultMovies = movieController.deserialize()
+        val resultSessions = sessionController.deserialize()
+        if (resultUsers == Success && resultMovies == Success && resultSessions == Success) {
+            return Success
+        }
+        var result = ""
+        result += if (resultUsers is Error) resultUsers.outputModel.message + "\n" else ""
+        result += if (resultMovies is Error) resultMovies.outputModel.message + "\n" else ""
+        result += if (resultSessions is Error) resultSessions.outputModel.message + "\n" else ""
+        return Error(OutputModel(result))
+    }
+
     override fun logIn(): Result {
         println(OutputModel("Enter login and password in format: login; password").message)
         val input = readln().split("; ")

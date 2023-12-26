@@ -1,6 +1,7 @@
 package domain
 
 import data.MovieDao
+import data.MovieEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import presentation.model.OutputModel
@@ -17,6 +18,7 @@ interface MovieController {
     fun changeDirector(id: Int, director: String): OutputModel
     fun changeDuration(id: Int, duration: String): OutputModel
     fun getAllMovies(): OutputModel
+    fun deserialize(): Result
 }
 
 class MovieControllerImpl(
@@ -80,6 +82,18 @@ class MovieControllerImpl(
     override fun getAllMovies(): OutputModel {
         val movies = movieDao.getAll().joinToString("\n")
         return OutputModel(movies).takeIf { it.message.isNotEmpty() } ?: OutputModel("List of movies is empty")
+    }
+
+    override fun deserialize(): Result {
+        return try {
+            val file = File(MOVIES_JSON_PATH)
+            val jsonString = file.readText()
+            val movies = Json.decodeFromString<List<MovieEntity>>(jsonString)
+            movieDao.load(movies)
+            Success
+        } catch (ex: Exception) {
+            Error(OutputModel("Unable to load movies data"))
+        }
     }
 
     private fun serialize(): OutputModel {

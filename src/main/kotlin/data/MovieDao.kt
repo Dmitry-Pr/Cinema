@@ -8,6 +8,7 @@ interface MovieDao {
     fun getAll(): List<MovieEntity>
     fun get(id: Int): MovieEntity?
     fun update(vararg listMovie: MovieEntity)
+    fun load(movies: List<MovieEntity>)
 }
 
 class RuntimeMovieDao : MovieDao {
@@ -30,5 +31,9 @@ class RuntimeMovieDao : MovieDao {
 
     override fun update(vararg listMovie: MovieEntity) =
         listMovie.forEach { movie -> movies[movie.id] = movie }
+
+    override fun load(movies: List<MovieEntity>) {
+        movies.forEach { add(it.name, it.director, it.duration) }
+    }
 
 }

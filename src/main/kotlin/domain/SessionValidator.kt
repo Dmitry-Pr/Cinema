@@ -45,7 +45,7 @@ class SessionValidatorImpl : SessionValidator {
                     return Success
                 }
             }
-            if (time.toJavaLocalDateTime() <= startTimes[i].toJavaLocalDateTime() + durations[i].toJavaDuration()) {
+            if (time.toJavaLocalDateTime() < startTimes[i].toJavaLocalDateTime() + durations[i].toJavaDuration()) {
                 return Error(OutputModel("Incorrect time to start session. There will be an intersection with the session at ${startTimes[i]}"))
             }
         }

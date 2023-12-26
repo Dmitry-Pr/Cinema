@@ -10,6 +10,7 @@ enum class Sections {
 
 interface MenuHandler {
     fun handleMenu()
+    fun start()
     var finish: Boolean
 }
 
@@ -26,6 +27,13 @@ class MenuHandlerImpl(
             Sections.Movie -> movieCommand()
             Sections.Session -> sessionCommand()
             Sections.Places -> placesCommand()
+        }
+    }
+
+    override fun start() {
+        val res = commandsHandler.start()
+        if (res is Error) {
+            println(res.outputModel.message)
         }
     }
 

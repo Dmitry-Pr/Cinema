@@ -1,9 +1,6 @@
 package domain
 
-import data.MovieDao
-import data.Places
-import data.SIZE_M
-import data.SessionDao
+import data.*
 import presentation.model.OutputModel
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.serialization.encodeToString
@@ -26,6 +23,7 @@ interface SessionController {
     fun getBoughtPlaces(id: Int): OutputModel
     fun getFreePlaces(id: Int): OutputModel
     fun getAllPlaces(id: Int): OutputModel
+    fun deserialize(): Result
 }
 
 class SessionControllerImpl(
@@ -189,6 +187,18 @@ class SessionControllerImpl(
             res += "$i\t"
         }
         return OutputModel(res)
+    }
+
+    override fun deserialize(): Result {
+        return try {
+            val file = File(SESSIONS_JSON_PATH)
+            val jsonString = file.readText()
+            val sessions = Json.decodeFromString<List<SessionEntity>>(jsonString)
+            sessionDao.load(sessions)
+            Success
+        } catch (ex: Exception) {
+            Error(OutputModel("Unable to load sessions data"))
+        }
     }
 
     private fun serialize(): OutputModel {

@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "name": "Avatar",
+    "director": "Cameron",
+    "duration": "PT3H"
+  },
+  {
+    "id": 1,
+    "name": "Titanic",
+    "director": "Cameron",
+    "duration": "PT3H"
+  }
+]
