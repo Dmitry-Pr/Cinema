@@ -6,7 +6,14 @@ import data.SIZE_M
 import data.SessionDao
 import presentation.model.OutputModel
 import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.File
+import java.io.FileNotFoundException
+import java.lang.Exception
 import java.time.format.DateTimeFormatter
+
+const val SESSIONS_JSON_PATH = "data/sessions.json"
 
 interface SessionController {
     fun addSession(timeStart: String, movieId: Int): OutputModel
@@ -39,7 +46,7 @@ class SessionControllerImpl(
                         DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
                     ).toKotlinLocalDateTime(), movieId
                 )
-                OutputModel("Added the session")
+                OutputModel("Added the session" + serialize().message)
             }
 
             is Error -> result.outputModel
@@ -61,7 +68,7 @@ class SessionControllerImpl(
                     ).toKotlinLocalDateTime()
                 )
                 sessionDao.update(newSession)
-                OutputModel("The start time is changed")
+                OutputModel("The start time is changed" + serialize().message)
             }
 
             is Error -> result.outputModel
@@ -73,7 +80,7 @@ class SessionControllerImpl(
         movieDao.get(movieId) ?: return OutputModel("Incorrect movie id")
         val newSession = session.copy(movieId = movieId)
         sessionDao.update(newSession)
-        return OutputModel("Movie for the session is changed")
+        return OutputModel("Movie for the session is changed" + serialize().message)
     }
 
     override fun buyPlace(id: Int, x: Int, y: Int): OutputModel {
@@ -82,7 +89,7 @@ class SessionControllerImpl(
             Success -> {
                 if (session.places[x][y] == Places.Free) {
                     session.places[x][y] = Places.Bought
-                    OutputModel("Successfully bought the place")
+                    OutputModel("Successfully bought the place" + serialize().message)
                 } else {
                     OutputModel("The place is already bought")
                 }
@@ -98,7 +105,7 @@ class SessionControllerImpl(
             Success -> {
                 if (session.places[x][y] != Places.Free) {
                     session.places[x][y] = Places.Free
-                    OutputModel("Successfully returned the ticket")
+                    OutputModel("Successfully returned the ticket" + serialize().message)
                 } else {
                     OutputModel("The place is not bought")
                 }
@@ -116,7 +123,7 @@ class SessionControllerImpl(
                     Places.Free -> OutputModel("The place is not bought")
                     Places.Bought -> {
                         session.places[x][y] = Places.Taken
-                        OutputModel("You can take your place")
+                        OutputModel("You can take your place" + serialize().message)
                     }
 
                     Places.Taken -> OutputModel("The place is already taken")
@@ -182,5 +189,18 @@ class SessionControllerImpl(
             res += "$i\t"
         }
         return OutputModel(res)
+    }
+
+    private fun serialize(): OutputModel {
+        return try {
+            val file = File(SESSIONS_JSON_PATH)
+            val jsonString = Json.encodeToString(sessionDao.getAll())
+            file.writeText(jsonString)
+            OutputModel("")
+        } catch (ex: FileNotFoundException) {
+            OutputModel("\nThe changes are not saved, saving file is not found")
+        } catch (ex: Exception) {
+            OutputModel("\nThe changes are not saved, unpredicted problem with saving file")
+        }
     }
 }

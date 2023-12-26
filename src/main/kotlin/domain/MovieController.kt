@@ -82,7 +82,7 @@ class MovieControllerImpl(
         return OutputModel(movies).takeIf { it.message.isNotEmpty() } ?: OutputModel("List of movies is empty")
     }
 
-    private fun serialize(): OutputModel{
+    private fun serialize(): OutputModel {
         return try {
             val file = File(MOVIES_JSON_PATH)
             val jsonString = Json.encodeToString(movieDao.getAll())
