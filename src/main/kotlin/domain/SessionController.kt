@@ -148,7 +148,7 @@ class SessionControllerImpl(
                 }
             }
         }
-        return OutputModel(res)
+        return OutputModel(res).takeIf { it.message.isNotEmpty() } ?: OutputModel("All places are free")
     }
 
     override fun getFreePlaces(id: Int): OutputModel {
@@ -161,7 +161,7 @@ class SessionControllerImpl(
                 }
             }
         }
-        return OutputModel(res)
+        return OutputModel(res).takeIf { it.message.isNotEmpty() } ?: OutputModel("All places are bought")
     }
 
     override fun getAllPlaces(id: Int): OutputModel {
